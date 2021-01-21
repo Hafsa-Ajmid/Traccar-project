@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html  lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+
+    <title>Flask App </title>
+
+    <!-- Bootstraps Java Scipts Links -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+
+    <!-- JQuery links  -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+    <!--High CHART LIVE  -->
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/highcharts-more.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/themes/high-contrast-light.js"></script>
+
+</head>
+
+<body>
+
+    <div class="jumbotron">
+        <br>
+        <br>
+       <center> <img src="https://data.whicdn.com/images/352500708/original.jpg"></center>
+    </div>
+    <br>
+    <br>
+    <center><a href="VisTrac"> Visualization 2</a></center>
+    <br>
+    <br>
+    <div class="container-fluid">
+        <!-- Example row of columns -->
+        <div class="row">
+            <div class="container-fluid" id="data-temperature">
+
+            </div>
+        </div>
+    </div>
+<br>
+<br>
+<br>
+
+<style>
+    a:link, a:visited {
+    background-color: #f44336;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  a:hover, a:active {
+    background-color: red;
+  }</style>
+
+    
+
+    <figure class="highcharts-figure">
+        <div id="container"></div>
+      </figure>
+
+    <script>
+        var chartTemperatue;
+        var chartHumidity;
+
+        function requestData()
+        {
+            // Ajax call to get the Data from Flask
+            var requests = $.get('/data');
+
+            var tm = requests.done(function (result)
+            {
+                // Temperature
+                var seriesTemperature = chartTemperatue.series[0],
+                    shiftTemperature = seriesTemperature.data.length > 3;
+
+
+
+
+                // Add the Point
+                // Time Humidity
+                var data2 = [];
+                data2.push(result[0]);
+                data2.push(result[1]);
+                var data3 = [];
+                data3.push(result[0]);
+                data3.push(5020);
+                var data4 = [];
+                data4.push(result[0]);
+                data4.push(2040);
+                var data5 = [];
+                data5.push(result[0]);
+                data5.push(6000);
+
+
+               
+                chartTemperatue.series[0].addPoint(data2, true, shiftTemperature);
+                chartTemperatue.series[1].addPoint(data3, true, shiftTemperature);
+                chartTemperatue.series[2].addPoint(data4, true, shiftTemperature);
+                chartTemperatue.series[3].addPoint(data5, true, shiftTemperature);
+                
+
+
+                // call it again after one second
+                setTimeout(requestData, 2000);
+
+            });
+        }
+
+        $(document).ready(function()
+        {
+            // --------------Chart 1 ----------------------------
+            chartTemperatue = new Highcharts.chart({
+                chart:
+                    {
+                        renderTo: 'data-temperature',
+                        defaultSeriesType: 'area',
+                        events: {
+                            load: requestData
+                        }
+                    },
+            title: {
+                text: 'Total Distance walked by every user'
+            },
+            xAxis: {
+                categories: ['User1', 'User2', 'User3', 'User4']
+            },
+            labels: {
+                items: [{
+                html: 'Total Distance walked by every user ',
+                style: {
+                    left: '50px',
+                    top: '18px',
+                    color: ( // theme
+                    Highcharts.defaultOptions.title.style &&
+                    Highcharts.defaultOptions.title.style.color
+                    ) || 'black'
+                }
+                }]
+            },
+            series: [{
+                type: 'column',
+                name: 'User1',
+                data: []
+            }, {
+                type: 'column',
+                name: 'User2',
+                data: []
+            }, {
+                type: 'column',
+                name: 'User3',
+                data: []
+            }, {
+                type: 'column',
+                name: 'User4',
+                data: [],
+                marker: {
+                lineWidth: 2,
+                lineColor: Highcharts.getOptions().colors[3],
+                fillColor: 'white'
+                }
+            }]
+            });
+            
+
+        });
+    </script>
+    <script>
+     //<!-----------------------chart3-->
+    var colors = Highcharts.getOptions().colors;
+
+        Highcharts.chart('container', {
+        chart: {
+            type: 'spline'
+        },
+
+        legend: {
+            symbolWidth: 40
+        },
+
+        title: {
+            text: 'Speed of every user in the last 24h'
+        },
+
+        
+
+        yAxis: {
+            title: {
+            text: 'Speed in Km'
+            }
+        },
+
+        xAxis: {
+            title: {
+            text: 'Time'
+            },
+            categories: ['00:00', '01:00', '02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00','24:00' ]
+        },
+
+       
+
+        plotOptions: {
+            series: {
+            point: {
+                events: {
+                click: function () {
+                    window.location.href = this.series.options.website;
+                }
+                }
+            },
+            cursor: 'pointer'
+            }
+        },
+
+        series: [
+            {
+            name: 'User1',
+            data: [null, 13.0, 11.2, null, null, null,10, 43.0, 11.2, 51.4, 64.9,10, 43.0, 51.2, 41.4, 64.9,23,14.10, 43.0, 51.2, 41.4],
+            website: 'https://www.nvaccess.org',
+            color: colors[2],
+            accessibility: {
+                description: 'This is the most used screen reader in 2019'
+            }
+            }, {
+            name: 'User2',
+            data: [null, null, null, null, null, null,null, null, null, 13.7, 60.0, 0,69.6, 63.7, 63.9, 43.7, 66.0, 61.7,69.6, 63.7, 63.9, 43.7, 66.0],
+            website: 'https://www.freedomscientific.com/Products/Blindness/JAWS',
+            dashStyle: 'ShortDashDot',
+            color: colors[0]
+            }, {
+            name: 'User3',
+            data: [null, null, null, null, null, 17.1,20.2, 13.7, 36.8,null, null, null,20.2, 30.7, 36.8, 30.9, 39.6, 47.1,20.2, null, null, null, null],
+            dashStyle: 'ShortDot',
+            color: colors[1]
+            }, {
+            name: 'User4',
+            data: [null, null, null, null, 21.4, 30.3, 30.7, 36.8, 30.9,21.4, 30.3, 30.7, 36.8, 30.9,21.4, 30.3, 30.7, 36.8, 30.9,21.4, null, null,null],
+            website: 'https://support.microsoft.com/en-us/help/22798/windows-10-complete-guide-to-narrator',
+            dashStyle: 'Dash',
+            color: colors[9]
+            }
+        ],
+
+        responsive: {
+            rules: [{
+            condition: {
+                maxWidth: 550
+            },
+            chartOptions: {
+                legend: {
+                itemWidth: 150
+                },
+                xAxis: {
+                categories: ['Dec. 2010', 'May 2012', 'Jan. 2014', 'July 2015', 'Oct. 2017', 'Sep. 2019']
+                },
+                yAxis: {
+                title: {
+                    enabled: false
+                }
+                }
+            }
+            }]
+        }
+        });
+ </script>
+
+
+
+<script>
+    class Image{
+
+        constructor(imgUrl, size)
+        {
+            this.imgUrl=imgUrl;
+            this.size=size;
+        }
+
+        backgroundImage()
+        {
+            console.log("inside function ")
+            // Select the Image
+            var img = document.querySelector(".jumbotron");
+
+            // create Css Text
+            var text = "margin:auto;"+
+                "background-image: url("+this.imgUrl+");" +
+                "background-size:cover;"+
+                "opacity:1;"+
+                "background-blend-mode: darken;"+
+                "height: "+ this.size + "vh;";
+
+            img.style.cssText =  text;
+        }
+
+        centerTitle()
+        {
+            /*
+                Center the Title
+             */
+            var t1 = document.querySelector("#title");
+            t1.classList.add("text-white");
+            t1.classList.add("text-center");
+            t1.classList.add("display-3");
+        }
+    }
+    const imgUrl = 'https://64.media.tumblr.com/tumblr_lxmrh0DlxB1qm3i8ko1_500.gifv'
+    const size = "50";
+    var obj = new Image(imgUrl, size);
+    obj.backgroundImage();
+    obj.centerTitle();
+    </script>
+</body>
+
+
+</html>
